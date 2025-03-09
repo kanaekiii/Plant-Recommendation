@@ -11,8 +11,8 @@ The dataset includes real-time sensor readings of:
 - 🌱 **Soil Moisture**
 - 🌍 **Other environmental parameters**
 
-Contributing
+## Contributing
 Feel free to contribute by adding more sensor data, improving the model, or optimizing the scripts.
 
-License
+## License
 This project is licensed under the MIT License.
