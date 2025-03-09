@@ -1,2 +1,18 @@
 # Plant-Recommendation
-A dataset collected using IoT sensors for monitoring air and soil parameters. The dataset includes real-time measurements of temperature, humidity, air quality, soil moisture, and other environmental factors to support research in smart agriculture, environmental monitoring, and IoT applications.
+
+## Overview
+This repository contains an **IoT-based dataset** for air and soil monitoring, along with a **K-Nearest Neighbors (KNN) model** for predictive analysis. The project aims to assist researchers and developers in analyzing environmental data for smart agriculture and pollution monitoring.
+
+## Dataset Description
+The dataset includes real-time sensor readings of:
+- 🌡 **Temperature**
+- 💧 **Humidity**
+- 🌫 **Air Quality (CO2, PM2.5, PM10, etc.)**
+- 🌱 **Soil Moisture**
+- 🌍 **Other environmental parameters**
+
+Contributing
+Feel free to contribute by adding more sensor data, improving the model, or optimizing the scripts.
+
+License
+This project is licensed under the MIT License.
