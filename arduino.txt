@@ -1,0 +1,105 @@
+#include <SoftwareSerial.h>
+#include <Wire.h>
+
+#define RE 8
+#define DE 7
+#define SensorPin1 A1
+#define SensorPin2 A0
+
+const byte nitro[] = {0x01, 0x03, 0x00, 0x1e, 0x00, 0x01, 0xe4, 0x0c};
+const byte phos[]  = {0x01, 0x03, 0x00, 0x1f, 0x00, 0x01, 0xb5, 0xcc};
+const byte pota[]  = {0x01, 0x03, 0x00, 0x20, 0x00, 0x01, 0x85, 0xc0};
+
+byte values[11];
+
+SoftwareSerial mod(2, 3);
+
+void setup() {
+  Serial.begin(9600);
+  mod.begin(9600);
+  
+  pinMode(RE, OUTPUT);
+  pinMode(DE, OUTPUT);
+  pinMode(SensorPin1, INPUT);
+  pinMode(SensorPin2, INPUT);
+  delay(500);
+}
+
+void loop() {
+  byte val1 = nitrogen();
+  delay(250);
+  byte val2 = phosphorous();
+  delay(250);
+  byte val3 = potassium();
+  delay(250);
+  
+  int sensorValue1 = analogRead(SensorPin1);
+  float voltage1 = sensorValue1 * (5.0 / 1023.0);
+  float pHValue = voltage1 * (14.0 / 5.0);
+  
+  int sensorValue2 = analogRead(SensorPin2);
+  int moisturePercent = map(sensorValue2, 0, 1023, 0, 100);
+  
+  Serial.print("Nitrogen: ");
+  Serial.print(val1);
+  Serial.println(" mg/kg");
+  
+  Serial.print("Phosphorous: ");
+  Serial.print(val2);
+  Serial.println(" mg/kg");
+  
+  Serial.print("Potassium: ");
+  Serial.print(val3);
+  Serial.println(" mg/kg");
+  
+  Serial.print("pH: ");
+  Serial.println(pHValue, 2);
+  
+  Serial.print("Soil moisture: ");
+  Serial.print(moisturePercent);
+  Serial.println("%");
+  
+  delay(2000);
+}
+
+byte nitrogen() {
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+  if (mod.write(nitro, sizeof(nitro)) == 8) {
+    digitalWrite(DE, LOW);
+    digitalWrite(RE, LOW);
+    for (byte i = 0; i < 7; i++) {
+      values[i] = mod.read();
+    }
+  }
+  return values[4];
+}
+
+byte phosphorous() {
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+  if (mod.write(phos, sizeof(phos)) == 8) {
+    digitalWrite(DE, LOW);
+    digitalWrite(RE, LOW);
+    for (byte i = 0; i < 7; i++) {
+      values[i] = mod.read();
+    }
+  }
+  return values[4];
+}
+
+byte potassium() {
+  digitalWrite(DE, HIGH);
+  digitalWrite(RE, HIGH);
+  delay(10);
+  if (mod.write(pota, sizeof(pota)) == 8) {
+    digitalWrite(DE, LOW);
+    digitalWrite(RE, LOW);
+    for (byte i = 0; i < 7; i++) {
+      values[i] = mod.read();
+    }
+  }
+  return values[4];
+}
