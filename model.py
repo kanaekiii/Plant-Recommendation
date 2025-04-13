@@ -3,10 +3,21 @@ import time
 import requests
 import numpy as np
 import joblib
+import json
+import math
 
-spi = spidev.SpiDev()
-spi.open(0, 0)
-spi.max_speed_hz = 1350000
+try:
+    spi = spidev.SpiDev()
+    spi.open(0, 0)
+    spi.max_speed_hz = 1350000
+except (FileNotFoundError, IOError):
+    print("SPI device not found. Mocking SPI for testing purposes.")
+    class MockSPI:
+        def xfer2(self, data):
+            return [0, 0, 0]
+        def close(self):
+            pass
+    spi = MockSPI()
 
 def read_channel(channel):
     adc = spi.xfer2([1, (8 + channel) << 4, 0])
@@ -25,8 +36,8 @@ def voltage_to_nutrient(voltage, nutrient='nitrogen'):
     else:
         return (voltage / 3.3) * 100
 
-def get_air_quality(api_token, city):
-    url = f"http://api.waqi.info/feed/{city}/?token={api_token}"
+def get_air_quality(api_token):
+    url = f"http://api.waqi.info/feed/here/?token={api_token}"
     try:
         response = requests.get(url, timeout=5)
         if response.status_code == 200:
@@ -71,10 +82,10 @@ phosphorus_value = voltage_to_nutrient(phosphorus_voltage, 'phosphorus')
 potassium_value = voltage_to_nutrient(potassium_voltage, 'potassium')
 
 plot_area = 500
+plot_area_acre = plot_area / 4046.86
 
 api_token = "be435989d42640ef15e2cb9c6281fdf2539f0b9e"
-city = "bangalore"  
-air_data = get_air_quality(api_token, city)
+air_data = get_air_quality(api_token)
 
 if air_data is None:
     air_data = {
@@ -109,8 +120,31 @@ label_encoder = joblib.load('label_encoder_knn.pkl')
 feature_vector_scaled = scaler_model.transform(feature_vector)
 
 pred = model.predict(feature_vector_scaled)
-predicted_plant = label_encoder.inverse_transform(pred)
+predicted_plant = label_encoder.inverse_transform(pred)[0]
 
-print("Recommended Plant Type:", predicted_plant[0])
+with open('rec.json', 'r') as json_file:
+    plant_data = json.load(json_file)
+
+plant_details = plant_data.get("plant_impact_timeline", {}).get(predicted_plant, {})
+recommended_density = plant_details.get('recommended_plant_density', 100)
+lower_limit = math.floor(plot_area_acre * int(recommended_density.split('-')[0]))
+upper_limit = math.ceil(plot_area_acre * int(recommended_density.split('-')[1]))
+num_trees = "{:.0f} - {:.0f}".format(lower_limit, upper_limit)
+
+formatted_output = (
+    f"The recommended plant for the given environmental conditions is {predicted_plant}. "
+    f"This selection is based on current air quality parameters such as AQI, PM2.5, NO2 levels, "
+    f"and soil nutrients including nitrogen, phosphorus, and potassium. "
+    f"By planting {predicted_plant}, air quality is expected to improve within {plant_details.get('time_to_improve_air_quality', 'an estimated timeframe')}. "
+    f"This plant will also have the following impact on the soil: {plant_details.get('impact_on_soil', 'unknown effects')}. "
+    f"For best results, it should be planted at a density of {recommended_density} trees per acre. "
+    f"Given the available plot area of {plot_area} square meters ({plot_area_acre:.2f} acres), approximately {num_trees} trees can be planted. "
+    f"Proper maintenance includes {plant_details.get('maintenance', 'general plant care')}. "
+    f"To ensure optimal growth and continued benefits, soil testing should be performed every {plant_details.get('recommended_testing_frequency', 'regular intervals')}. "
+    f"This plant thrives best in {plant_details.get('optimal_climate', 'a suitable climate')}. "
+    f"Additionally, it has a carbon sequestration potential of {plant_details.get('carbon_sequestration_potential', 'estimated values')}, contributing positively to environmental sustainability."
+)
+
+print(formatted_output)
 
 spi.close()

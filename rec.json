@@ -1,0 +1,53 @@
+{
+    "plant_impact_timeline": {
+        "Mango": {
+            "time_to_improve_air_quality": "3-5 years",
+            "impact_on_soil": "Enhances organic content, improves microbial activity",
+            "maintenance": "Moderate watering, annual pruning, seasonal fertilization",
+            "optimal_climate": "Tropical and subtropical",
+            "carbon_sequestration_potential": "High",
+            "recommended_plant_density": "10-15",
+            "recommended_testing_frequency": "12-18 months"
+        },
+        "Neem": {
+            "time_to_improve_air_quality": "2-3 years",
+            "impact_on_soil": "Increases nitrogen levels, acts as natural pest repellent",
+            "maintenance": "Minimal watering, low maintenance, periodic trimming",
+            "optimal_climate": "Arid and semi-arid",
+            "carbon_sequestration_potential": "Very High",
+            "recommended_plant_density": "15-20",
+            "recommended_testing_frequency": "6-12 months"
+        },
+        "Jamun": {
+            "time_to_improve_air_quality": "4-6 years",
+            "impact_on_soil": "Improves moisture retention, supports soil biodiversity",
+            "maintenance": "Regular deep watering, occasional pruning, pest control",
+            "optimal_climate": "Tropical and subtropical",
+            "carbon_sequestration_potential": "Moderate",
+            "recommended_plant_density": "8-12",
+            "recommended_testing_frequency": "12-18 months"
+        },
+        "Amla": {
+            "time_to_improve_air_quality": "3-4 years",
+            "impact_on_soil": "Enhances nutrient absorption, stabilizes pH levels",
+            "maintenance": "Regular watering, fertilization during growth seasons",
+            "optimal_climate": "Dry subtropical and tropical",
+            "carbon_sequestration_potential": "High",
+            "recommended_plant_density": "12-18",
+            "recommended_testing_frequency": "6-12 months"
+        },
+        "Drumstick": {
+            "time_to_improve_air_quality": "1-2 years",
+            "impact_on_soil": "Boosts potassium content, enhances drought resistance",
+            "maintenance": "Minimal care, thrives in dry conditions, occasional pruning",
+            "optimal_climate": "Tropical and arid",
+            "carbon_sequestration_potential": "Moderate",
+            "recommended_plant_density": "20-25",
+            "recommended_testing_frequency": "6-12 months"
+        }
+    },
+    "general_testing_guidelines": {
+        "high_pollution_urban_areas": "Test every 6 months",
+        "stable_rural_environments": "Test every 2 years"
+    }
+}
