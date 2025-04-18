@@ -5,11 +5,9 @@ This repository contains an **IoT-based dataset** for air and soil monitoring, a
 
 ## Dataset Description
 The dataset includes real-time sensor readings of:
-- 🌡 **Temperature**
-- 💧 **Humidity**
 - 🌫 **Air Quality (CO2, PM2.5, PM10, etc.)**
 - 🌱 **Soil Moisture**
-- 🌍 **Other environmental parameters**
+- 🌍 **NPK**
 
 ## Contributing
 Feel free to contribute by adding more sensor data, improving the model, or optimizing the scripts.
